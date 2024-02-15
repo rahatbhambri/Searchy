@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Form Submission</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</head>
+<body>
+
+<div id="app">
+    <h1>Vue Form Submission</h1>
+    <form @submit.prevent="submitForm">
+        <label for="topic">Enter Topic:</label>
+        <input type="topic" id="topic" v-model="formData.topic" required>
+        <br>
+        <button type="submit" @click=submitForm()>Submit</button>
+    </form>
+    <div v-if="topic_set">
+        <p>Topic set successfully!</p>
+        <p>Current Topic: [[ formData.topic ]]</p>
+        <form @submit.prevent>
+            <input id="question" v-model="question" :placeholder="'Ask anything about ' + formData.topic">
+            <button type="submit" @click="getAnswer()"> Ask question </button>
+        </form>
+    </div>
+    <div v-if="answer_received">
+        <p>Answer : [[ this.answer ]]</p>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        delimiters: ['[[', ']]'],
+        data: {
+            formData: {
+                topic: ''
+            },
+            topic_set: false,
+            question : null,
+            answer_received : false,
+            answer : null
+
+        },
+        methods: {
+            async submitForm() {
+                const data = {"topic": this.formData["topic"]}
+                const response = await axios.post('/setTopic', data);
+                console.log('Server response:', response.data);
+
+                console.log('Form submitted:', this.formData);
+                // Mark the form as submitted
+                this.topic_set = true;
+            }, 
+            async getAnswer(){
+                this.answer_received = false
+                const data = {"question": this.question}
+                const response = await axios.get('/answer', {
+                    params: data
+                });               
+                this.answer_received = true ;
+                this.answer = response.data ;
+                console.log('Server response:', response.data);
+                console.log('Question submitted:', this.question);
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

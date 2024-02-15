@@ -17,7 +17,8 @@ class QASystem:
 
         #Tokenizer
         self.tokenizer = BertTokenizer.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
-        self.context = self.SetContext(input("Enter topic you want to enquire \n"))
+        self.context = None
+        #self.context = self.SetContext(input("Enter topic you want to enquire \n"))
 
 
     def SetContext(self, topic):
@@ -32,11 +33,13 @@ class QASystem:
         for paragraph in paragraphs:
             para += paragraph.text
 
-        paragraph = para
-        return paragraph
+        self.context = para
 
 
     def getAnswer(self, question):
+        if question == "1":
+            return self.context
+        
         # Encode question and paragraph
         encoding = self.tokenizer.encode_plus(text=question, text_pair=self.context, max_length=512, truncation=True, return_tensors="pt")
 
@@ -86,8 +89,8 @@ class QASystem:
                     print("Answer:", answer)
     
 
-qasys = QASystem()
-qasys.startAsking()
+
+#qasys.startAsking()
 
 
 
