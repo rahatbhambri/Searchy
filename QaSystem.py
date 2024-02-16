@@ -2,7 +2,7 @@ import torch, requests
 from transformers import BertForQuestionAnswering
 from transformers import BertTokenizer
 from bs4 import BeautifulSoup
-import warnings
+import warnings, re
 
 # Suppress all warnings
 warnings.filterwarnings("ignore", message = "Be aware, overflowing tokens are not returned for the setting you have chosen.*" \
@@ -65,7 +65,11 @@ class QASystem:
             else:
                 corrected_answer += ' ' + word
 
-        return corrected_answer
+        pattern = r"\[\d+\]"
+
+        # Replace the pattern with an empty string
+        corrected_answer = re.sub(pattern, "", corrected_answer)
+        return corrected_answer if "[SEP]" not in corrected_answer else "I don't know that"
 
 
     def startAsking(self):
