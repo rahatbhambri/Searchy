@@ -27,5 +27,7 @@ def setTopic():
 
 @views_bp.route("/answer", methods = ["GET"])
 def getAnswer():
+    data = {}
     question = request.args.get('question')
-    return qasys.getAnswer(question)
+    data['answer'], data['img'] = qasys.getAnswer(question)
+    return data

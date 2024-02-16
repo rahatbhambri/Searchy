@@ -28,6 +28,7 @@
     </div>
     <div v-if="answer_received">
         <p>Answer : [[ this.answer ]]</p>
+        <img :src="img">
     </div>
 </div>
 
@@ -42,7 +43,8 @@
             topic_set: false,
             question : null,
             answer_received : false,
-            answer : null
+            answer : null,
+            img : null
 
         },
         methods: {
@@ -62,7 +64,8 @@
                     params: data
                 });               
                 this.answer_received = true ;
-                this.answer = response.data ;
+                this.answer = response.data['answer'] ;
+                this.img = response.data['img']
                 console.log('Server response:', response.data);
                 console.log('Question submitted:', this.question);
             }

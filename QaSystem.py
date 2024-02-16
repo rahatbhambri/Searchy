@@ -18,10 +18,13 @@ class QASystem:
         #Tokenizer
         self.tokenizer = BertTokenizer.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
         self.context = None
+        self.topic = None
+        self.image = None
         #self.context = self.SetContext(input("Enter topic you want to enquire \n"))
 
 
     def SetContext(self, topic):
+        self.topic = topic
         response = requests.get(f"https://en.wikipedia.org/wiki/{topic.lower()}")
         soup = BeautifulSoup(response.content, "html.parser")
 
@@ -33,7 +36,18 @@ class QASystem:
         for paragraph in paragraphs:
             para += paragraph.text
 
+        imgs = soup.find_all('img')
+        print(imgs)
+
+        image_src = None
+        for img in imgs:
+            if self.topic in img['src']:
+                image_src = img['src']
+                break
+        
         self.context = para
+        self.image = image_src
+        
 
 
     def getAnswer(self, question):
@@ -69,7 +83,9 @@ class QASystem:
 
         # Replace the pattern with an empty string
         corrected_answer = re.sub(pattern, "", corrected_answer)
-        return corrected_answer if "[SEP]" not in corrected_answer else "I don't know that"
+        corrected_answer = corrected_answer if "[SEP]" not in corrected_answer else "I don't know that"
+        return corrected_answer, self.image
+
 
 
     def startAsking(self):
