@@ -1,8 +1,13 @@
-import torch, requests
+import torch, requests, re
 from transformers import BertForQuestionAnswering
 from transformers import BertTokenizer
 from bs4 import BeautifulSoup
 import warnings
+from nltk.tag import pos_tag
+import nltk
+
+
+nltk.download('averaged_perceptron_tagger')
 
 # Suppress all warnings
 warnings.filterwarnings("ignore", message = "Be aware, overflowing tokens are not returned for the setting you have chosen.*" \
@@ -14,7 +19,6 @@ class QASystem:
     def __init__(self):
         #Model
         self.model = BertForQuestionAnswering.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
-
         #Tokenizer
         self.tokenizer = BertTokenizer.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
         self.context = None
@@ -22,42 +26,48 @@ class QASystem:
 
 
     def SetContext(self, topic):
+        topic = topic.strip()
+        print("topic ", topic)
         response = requests.get(f"https://en.wikipedia.org/wiki/{topic.lower()}")
         soup = BeautifulSoup(response.content, "html.parser")
 
         # Find all paragraphs on the webpage
         paragraphs = soup.find_all("p")
-
         para = ""
         # Extract and print the text content of each paragraph
         for paragraph in paragraphs:
             para += paragraph.text
-
         self.context = para
 
 
     def getAnswer(self, question):
-        if question == "1":
+        if str(question) == "1":
             return self.context
+        
+        tagged_sent = pos_tag(question.split())
+        print(tagged_sent)
+        prop_n = ""
+        for w in tagged_sent:
+            if w[1] in ['NNP', 'NNS', 'NN']:
+                prop_n += f"{w[0]} "
+        
+        print(prop_n)
+        self.SetContext(prop_n)
+
         
         # Encode question and paragraph
         encoding = self.tokenizer.encode_plus(text=question, text_pair=self.context, max_length=512, truncation=True, return_tensors="pt")
-
         # Perform inference
         start_scores, end_scores = self.model(**encoding, return_dict=False)
-
         # Get the index of the start and end tokens with the highest score
         start_index = torch.argmax(start_scores)
         end_index = torch.argmax(end_scores)
-
         # Get the tokens corresponding to the answer
         tokens = self.tokenizer.convert_ids_to_tokens(encoding['input_ids'].squeeze())
         answer_tokens = tokens[start_index:end_index+1]
-
         # Convert answer tokens back to string
         answer = self.tokenizer.convert_tokens_to_string(answer_tokens)
         corrected_answer = ''
-
         for word in answer.split():
             #If it's a subword token
             if word[0:2] == '##':
@@ -65,7 +75,11 @@ class QASystem:
             else:
                 corrected_answer += ' ' + word
 
-        return corrected_answer
+        pattern = r"\[\d+\]"
+
+        # Replace the pattern with an empty string
+        corrected_answer = re.sub(pattern, "", corrected_answer)
+        return corrected_answer if "[SEP]" not in corrected_answer else "I don't know that"
 
 
     def startAsking(self):
