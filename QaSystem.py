@@ -2,19 +2,16 @@ import torch, requests
 from transformers import BertForQuestionAnswering
 from transformers import BertTokenizer
 from bs4 import BeautifulSoup
-import warnings, re
-
+import warnings, re, random
 # Suppress all warnings
 warnings.filterwarnings("ignore", message = "Be aware, overflowing tokens are not returned for the setting you have chosen.*" \
 , category=RuntimeWarning)
 
 
 class QASystem:
-
     def __init__(self):
         #Model
         self.model = BertForQuestionAnswering.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
-
         #Tokenizer
         self.tokenizer = BertTokenizer.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
         self.context = None
@@ -27,47 +24,39 @@ class QASystem:
         self.topic = topic
         response = requests.get(f"https://en.wikipedia.org/wiki/{topic.lower()}")
         soup = BeautifulSoup(response.content, "html.parser")
-
         # Find all paragraphs on the webpage
         paragraphs = soup.find_all("p")
-
         para = ""
         # Extract and print the text content of each paragraph
         for paragraph in paragraphs:
             para += paragraph.text
-
         imgs = soup.find_all('img')
-        print(imgs)
+        #print(imgs)
 
-        image_src = None
+        image_src = []
+        t = self.topic.split(" ")
+        t = t[-1].lower()
         for img in imgs:
-            if self.topic in img['src']:
-                image_src = img['src']
-                break
+            if t in img['src'].lower():
+                image_src += [img['src']]
         
         self.context = para
         self.image = image_src
         
 
-
     def getAnswer(self, question):
         if question == "1":
-            return self.context
-        
+            return self.context        
         # Encode question and paragraph
         encoding = self.tokenizer.encode_plus(text=question, text_pair=self.context, max_length=512, truncation=True, return_tensors="pt")
-
         # Perform inference
         start_scores, end_scores = self.model(**encoding, return_dict=False)
-
         # Get the index of the start and end tokens with the highest score
         start_index = torch.argmax(start_scores)
         end_index = torch.argmax(end_scores)
-
         # Get the tokens corresponding to the answer
         tokens = self.tokenizer.convert_ids_to_tokens(encoding['input_ids'].squeeze())
         answer_tokens = tokens[start_index:end_index+1]
-
         # Convert answer tokens back to string
         answer = self.tokenizer.convert_tokens_to_string(answer_tokens)
         corrected_answer = ''
@@ -79,12 +68,15 @@ class QASystem:
             else:
                 corrected_answer += ' ' + word
 
-        pattern = r"\[\d+\]"
-
+        pattern = r"\[\s*\d+\s*\]"
         # Replace the pattern with an empty string
         corrected_answer = re.sub(pattern, "", corrected_answer)
         corrected_answer = corrected_answer if "[SEP]" not in corrected_answer else "I don't know that"
-        return corrected_answer, self.image
+        
+        i = random.randint(0, len(self.image))
+        curr_im = self.image[i] if len(self.image) > 0 else None
+
+        return corrected_answer, curr_im
 
 
 

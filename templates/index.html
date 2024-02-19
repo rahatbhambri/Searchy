@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vue Form Submission</title>
+    <title>Searchy
+    </title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -11,7 +12,8 @@
 <body>
 
 <div id="app">
-    <h1>Vue Form Submission</h1>
+    <h1 id="phead">Searchy<img id ="searchy" src="{{ url_for('static', filename='fish.gif') }}">    
+    </h1>
     <form @submit.prevent="submitForm">
         <label for="topic">Enter Topic:</label>
         <input type="topic" id="topic" v-model="formData.topic" required>
@@ -20,7 +22,7 @@
     </form>
     <div v-if="topic_set">
         <p>Topic set successfully!</p>
-        <p>Current Topic: [[ formData.topic ]]</p>
+        <p>Current Topic: <strong>[[ topic ]]</strong></p>
         <form @submit.prevent>
             <input id="question" v-model="question" :placeholder="'Ask anything about ' + formData.topic">
             <button type="submit" @click="getAnswer()"> Ask question </button>
@@ -31,7 +33,23 @@
         <img :src="img">
     </div>
 </div>
-
+<style>
+    #searchy {
+        width : 1in ;
+        height : 1in ;
+        display: inline; /* Display the image inline */
+        vertical-align: middle; /* Align the image vertically in the line */
+    }
+    #app {
+        margin: 0 auto;
+        /* Optional: Add width and height for demonstration */
+        width: 200px;
+        height: 200px;
+        /* Optional: Add background color for demonstration */
+        background-color: aqua;
+    }
+</style>
+    
 <script>
     new Vue({
         el: '#app',
@@ -40,6 +58,7 @@
             formData: {
                 topic: ''
             },
+            topic : null,
             topic_set: false,
             question : null,
             answer_received : false,
@@ -55,6 +74,7 @@
 
                 console.log('Form submitted:', this.formData);
                 // Mark the form as submitted
+                this.topic = this.formData["topic"]
                 this.topic_set = true;
             }, 
             async getAnswer(){
@@ -73,5 +93,9 @@
     });
 </script>
 
+
+
 </body>
 </html>
+
+
