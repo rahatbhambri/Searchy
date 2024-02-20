@@ -82,7 +82,6 @@ class QASystem:
 
 
     def startAsking(self):
-
         while True:
             question = input("Enter question or 1 to print context or 2 to switch context or 0 to end \n")
             if question == "0":

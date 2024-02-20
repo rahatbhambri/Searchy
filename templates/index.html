@@ -33,7 +33,7 @@
     </div>
     <br>
     <div v-if="answer_received">
-        <img :src="img">
+        <img :src="img" id="curr_img">
         <p><strong>Answer : </strong>[[ this.answer ]]</p>
     </div>
 </div>
@@ -65,6 +65,10 @@
     }
     #topic {
         width : 1in ;
+    }
+    #curr_img {
+        width : 300px ;
+        height : 300px ;
     }
     hr {
         border: 2px solid darkblue;
