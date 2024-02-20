@@ -14,23 +14,27 @@
 <div id="app">
     <h1 id="phead">Searchy<img id ="searchy" src="{{ url_for('static', filename='fish.gif') }}">    
     </h1>
-    <form @submit.prevent="submitForm">
-        <label for="topic">Enter Topic:</label>
-        <input type="topic" id="topic" v-model="formData.topic" required>
-        <br>
-        <button type="submit" @click=submitForm()>Submit</button>
-    </form>
+    <div>
+        <form @submit.prevent="submitForm" id="topic_setter">
+            <label for="topic">Enter Topic:</label>
+            <input type="topic" id="topic" v-model="formData.topic" required>
+            <button type="submit" @click=submitForm()>Submit</button>
+        </form>
+    </div>
     <div v-if="topic_set">
-        <p>Topic set successfully!</p>
-        <p>Current Topic: <strong>[[ topic ]]</strong></p>
+        <p>Current Topic: <strong>[[ topic ]]</strong> set successfully!</p>
+        <hr>
+    </div>
+    <div v-if="topic_set">
         <form @submit.prevent>
             <input id="question" v-model="question" :placeholder="'Ask anything about ' + formData.topic">
             <button type="submit" @click="getAnswer()"> Ask question </button>
         </form>
     </div>
+    <br>
     <div v-if="answer_received">
-        <p>Answer : [[ this.answer ]]</p>
         <img :src="img">
+        <p><strong>Answer : </strong>[[ this.answer ]]</p>
     </div>
 </div>
 <style>
@@ -40,12 +44,30 @@
         display: inline; 
         vertical-align: middle; 
     }
+
     #app {
         margin: 0 auto;
-        width: 200px;
-        height: 200px;
+        width: 300px;
+        height: 500px;
         background-color: aqua;
         border: 0.1in solid darkblue; 
+        flex-flow: row wrap;
+        overflow: auto; 
+    }
+    #phead {
+        background-color: blue ;
+        color : white ;
+        border: 0.05in solid white; 
+
+    }
+    #topic_setter{
+        display: inline ;
+    }
+    #topic {
+        width : 1in ;
+    }
+    hr {
+        border: 2px solid darkblue;
     }
 </style>    
 

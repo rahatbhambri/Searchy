@@ -46,7 +46,7 @@ class QASystem:
 
     def getAnswer(self, question):
         if question == "1":
-            return self.context        
+            return self.context, None        
         # Encode question and paragraph
         encoding = self.tokenizer.encode_plus(text=question, text_pair=self.context, max_length=512, truncation=True, return_tensors="pt")
         # Perform inference
@@ -73,9 +73,10 @@ class QASystem:
         corrected_answer = re.sub(pattern, "", corrected_answer)
         corrected_answer = corrected_answer if "[SEP]" not in corrected_answer else "I don't know that"
         
-        i = random.randint(0, len(self.image))
-        curr_im = self.image[i] if len(self.image) > 0 else None
+        i = random.randint(0, len(self.image)-1) if len(self.image) > 0 else -1
+        curr_im = self.image[i] if i >= 0 else None
 
+        #print("res = ", corrected_answer, curr_im)
         return corrected_answer, curr_im
 
 
