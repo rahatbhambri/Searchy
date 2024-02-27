@@ -13,17 +13,17 @@
 </head>
 <body>
 
-<div id="app">
+<div id="app" class="column justify-content-center">
     <h1 id="phead">Searchy<img id ="searchy" src="{{ url_for('static', filename='fish.gif') }}">    
     </h1>
     <div >
         <form @submit.prevent>
-            <input id="question" v-model="question" placeholder="Ask me anything">
+            <input id="question" style="width: 300px;" v-model="question" placeholder="Ask me anything">
             <button type="submit" @click="getAnswer()" class="btn btn-primary"> Ask a question </button>
         </form>
     </div>
     <br>
-    <div v-if="answer_received">
+    <div v-if="answer_received" class="d-flex">
         <img :src="img" id="curr_img" class="img-fluid">
         <p  class="alert alert-primary"><strong>Answer : </strong> [[ this.answer ]] 
         <span class="blinking-cursor">|</span> .
@@ -41,14 +41,13 @@
 
     #app {
         margin: 0 auto;
-        width: 400px;
+        width: 800px;
         height: 500px;
         background-color: aqua;
         border: 0.1in solid darkblue; 
         flex-flow: row wrap;
-        /* overflow: auto; */
-        overflow-y: auto; /* Enable vertical scrollbar */
-
+        overflow: auto; 
+        /* Enable vertical scrollbar */
     }
     #phead {
         background-color: blue ;
@@ -77,6 +76,9 @@
         50.1%, 100% {
             opacity: 0;
         }
+    }
+    #answer{
+        overflow-y: auto;
     }
 </style>    
 
@@ -107,6 +109,10 @@
                 // console.log('Question submitted:', this.question);
                 let index = 0;
                 const startTyping = () => {
+                    this.$nextTick(() => {
+                        this.scrollToBottom();
+                      });
+
                     if (index < text.length) {
                       this.answer = text.slice(0, index + 1); // Updated to include the current character
                       index++;
@@ -114,10 +120,15 @@
                     } else {
                       this.answer = text;
                     }
+                    
                   };
                   
                 startTyping();
                 console.log(text, this.answer) ;
+            }, 
+            scrollToBottom() {
+                const scrollableDiv = this.$refs.scrollableDiv;
+                scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
             }
         }
     });
