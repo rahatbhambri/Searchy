@@ -5,13 +5,17 @@ from bs4 import BeautifulSoup
 import warnings
 from nltk.tag import pos_tag
 import nltk
+import spacy
 
 
 nltk.download('averaged_perceptron_tagger')
-
 # Suppress all warnings
 warnings.filterwarnings("ignore", message = "Be aware, overflowing tokens are not returned for the setting you have chosen.*" \
 , category=RuntimeWarning)
+nlp = spacy.load('en_core_web_sm')
+
+
+    
 
 
 class QASystem:
@@ -40,19 +44,25 @@ class QASystem:
         self.context = para
 
 
-    def getAnswer(self, question):
+    def getAnswer(self, question, model=nlp):
         if str(question) == "1":
             return self.context
         
-        tagged_sent = pos_tag(question.split())
-        print(tagged_sent)
-        prop_n = ""
-        for w in tagged_sent:
-            if w[1] in ['NNP', 'NNS', 'NN']:
-                prop_n += f"{w[0]} "
+            # Create doc object
+        doc = model(question)
         
-        print(prop_n)
-        self.SetContext(prop_n)
+        # Initialize count
+        count = 0
+        s = ""
+        # Iterate over tokens in the document
+        for token in doc:
+            print(token, token.pos_)
+            # Check if token is a proper noun
+            if token.pos_ == 'PROPN':
+                s += (str(token) + " ") 
+                
+        self.SetContext(s.strip())
+        
 
         
         # Encode question and paragraph
