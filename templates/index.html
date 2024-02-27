@@ -7,6 +7,8 @@
     </title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
 
 </head>
 <body>
@@ -17,13 +19,13 @@
     <div >
         <form @submit.prevent>
             <input id="question" v-model="question" placeholder="Ask me anything">
-            <button type="submit" @click="getAnswer()"> Ask a question </button>
+            <button type="submit" @click="getAnswer()" class="btn btn-primary"> Ask a question </button>
         </form>
     </div>
     <br>
     <div v-if="answer_received">
-        <img :src="img" id="curr_img">
-        <p><strong>Answer : </strong> [[ this.answer ]] 
+        <img :src="img" id="curr_img" class="img-fluid">
+        <p  class="alert alert-primary"><strong>Answer : </strong> [[ this.answer ]] 
         <span class="blinking-cursor">|</span> .
         </p> 
         </div>
@@ -39,12 +41,14 @@
 
     #app {
         margin: 0 auto;
-        width: 300px;
+        width: 400px;
         height: 500px;
         background-color: aqua;
         border: 0.1in solid darkblue; 
         flex-flow: row wrap;
-        overflow: auto; 
+        /* overflow: auto; */
+        overflow-y: auto; /* Enable vertical scrollbar */
+
     }
     #phead {
         background-color: blue ;
@@ -55,6 +59,8 @@
     #curr_img {
         width : 300px ;
         height : 300px ;
+        border: 0.05in solid black; 
+
     }
     hr {
         border: 2px solid darkblue;
