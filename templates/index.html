@@ -14,21 +14,10 @@
 <div id="app">
     <h1 id="phead">Searchy<img id ="searchy" src="{{ url_for('static', filename='fish.gif') }}">    
     </h1>
-    <div>
-        <form @submit.prevent="submitForm" id="topic_setter">
-            <label for="topic">Enter Topic:</label>
-            <input type="topic" id="topic" v-model="formData.topic" required>
-            <button type="submit" @click=submitForm()>Submit</button>
-        </form>
-    </div>
-    <div v-if="topic_set">
-        <p>Current Topic: <strong>[[ topic ]]</strong> set successfully!</p>
-        <hr>
-    </div>
-    <div v-if="topic_set">
+    <div >
         <form @submit.prevent>
-            <input id="question" v-model="question" :placeholder="'Ask anything about ' + formData.topic">
-            <button type="submit" @click="getAnswer()"> Ask question </button>
+            <input id="question" v-model="question" placeholder="Ask me anything">
+            <button type="submit" @click="getAnswer()"> Ask a question </button>
         </form>
     </div>
     <br>
@@ -60,12 +49,6 @@
         border: 0.05in solid white; 
 
     }
-    #topic_setter{
-        display: inline ;
-    }
-    #topic {
-        width : 1in ;
-    }
     #curr_img {
         width : 300px ;
         height : 300px ;
@@ -81,11 +64,6 @@
         el: '#app',
         delimiters: ['[[', ']]'],
         data: {
-            formData: {
-                topic: ''
-            },
-            topic : null,
-            topic_set: false,
             question : null,
             answer_received : false,
             answer : null,
@@ -93,17 +71,8 @@
 
         },
         methods: {
-            async submitForm() {
-                const data = {"topic": this.formData["topic"]}
-                const response = await axios.post('/setTopic', data);
-                console.log('Server response:', response.data);
-
-                console.log('Form submitted:', this.formData);
-                // Mark the form as submitted
-                this.topic = this.formData["topic"]
-                this.topic_set = true;
-            }, 
             async getAnswer(){
+                //console.log('Server response:'.data);
                 this.answer_received = false
                 const data = {"question": this.question}
                 const response = await axios.get('/answer', {

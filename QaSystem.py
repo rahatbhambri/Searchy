@@ -3,9 +3,13 @@ from transformers import BertForQuestionAnswering
 from transformers import BertTokenizer
 from bs4 import BeautifulSoup
 import warnings, re, random
+import spacy
+
 # Suppress all warnings
 warnings.filterwarnings("ignore", message = "Be aware, overflowing tokens are not returned for the setting you have chosen.*" \
 , category=RuntimeWarning)
+nlp = spacy.load('en_core_web_sm')
+
 
 
 class QASystem:
@@ -44,9 +48,21 @@ class QASystem:
         self.image = image_src
         
 
-    def getAnswer(self, question):
+    def getAnswer(self, question, model = nlp):
         if question == "1":
             return self.context, None        
+        
+         # Create doc object
+        doc = model(question)
+        s = ""
+        # Iterate over tokens in the document
+        for token in doc:
+            print(token, token.pos_)
+            # Check if token is a proper noun
+            if token.pos_ == 'PROPN':
+                s += (str(token) + " ") 
+        self.SetContext(s.strip())
+        
         # Encode question and paragraph
         encoding = self.tokenizer.encode_plus(text=question, text_pair=self.context, max_length=512, truncation=True, return_tensors="pt")
         # Perform inference
