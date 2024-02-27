@@ -23,7 +23,10 @@
     <br>
     <div v-if="answer_received">
         <img :src="img" id="curr_img">
-        <p><strong>Answer : </strong>[[ this.answer ]]</p>
+        <p><strong>Answer : </strong> [[ this.answer ]] 
+        <span class="blinking-cursor">|</span> .
+        </p> 
+        </div>
     </div>
 </div>
 <style>
@@ -56,6 +59,19 @@
     hr {
         border: 2px solid darkblue;
     }
+    .blinking-cursor {
+        margin-left: 5px;
+        background-color: #fff;
+        animation: blink 1s infinite;
+    }
+    @keyframes blink {
+        0%, 50% {
+            opacity: 1;
+        }
+        50.1%, 100% {
+            opacity: 0;
+        }
+    }
 </style>    
 
     
@@ -79,13 +95,29 @@
                     params: data
                 });               
                 this.answer_received = true ;
-                this.answer = response.data['answer'] ;
+                const text = response.data['answer'] ;
                 this.img = response.data['img']
-                console.log('Server response:', response.data);
-                console.log('Question submitted:', this.question);
+                // console.log('Server response:', response.data);
+                // console.log('Question submitted:', this.question);
+                let index = 0;
+                const startTyping = () => {
+                    if (index < text.length) {
+                      this.answer = text.slice(0, index + 1); // Updated to include the current character
+                      index++;
+                      setTimeout(startTyping, Math.random()*15 + 10);
+                    } else {
+                      this.answer = text;
+                    }
+                  };
+                  
+                startTyping();
+                console.log(text, this.answer) ;
             }
         }
     });
+
+   
+
 </script>
 
 

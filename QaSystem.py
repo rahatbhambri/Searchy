@@ -50,11 +50,20 @@ class QASystem:
         
         doc = model(question)
         s = ""
+        s_alt = []
+        c_pn = 0
         for token in doc:
             print(token, token.pos_)
             if token.pos_ == 'PROPN':
                 s += (str(token) + " ") 
-        self.SetContext(s.strip())
+                c_pn += 1
+            elif token.pos_ == 'NOUN':
+                s_alt += [str(token)]
+                
+        if c_pn > 0 :
+            self.SetContext(s.strip())
+        else:
+            self.SetContext(s_alt[0].strip())
         
         #Answering question based on context        
         encoding = self.tokenizer.encode_plus(text=question, text_pair=self.context, max_length=512, truncation=True, return_tensors="pt")
