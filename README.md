@@ -11,7 +11,7 @@ Searchy is a Predicitive AI based Questions answering system. Searchy uses a com
 **2. Sentence matching:**
   Google's Bert model
 
-**3. Sentence tagging:**
+**3. POS tagging:**
   Spacy's NLP model 
 
 **4. Deployment:**
