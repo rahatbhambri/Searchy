@@ -17,40 +17,52 @@
         <img class="img-fluid mx-auto" id ="searchy" src="{{ url_for('static', filename='fish.gif') }}">    
     </h1>
     
-    <!-- <Sidebar> </Sidebar> -->
-    <div>
-        <ul >
-            <li v-for="chat in chats" :key="chat.question" class="d-flex"> 
-                <img :src="chat.img" id="curr_img" class="img-fluid">
-                <p class="alert alert-primary">
-                    <strong> Q: </strong> [[ chat.question ]] 
-                    <br>
-                    <strong>Answer : </strong> [[ chat.answer ]] 
-                </p> 
-                <br>
-            </li>
-        </ul>
-    </div> 
+    <div class="sidebar">
+        <ul>
+          <li><router-link to="/">Session 1</router-link></li>
+          <li><router-link to="/about">Session 2</router-link></li>
+          </ul>
+    </div>
 
-    <div v-if="answer_received" class="d-flex">
-        <img :src="img" id="curr_img" class="img-fluid">
-        <p class="alert alert-primary">
-            <strong>Q: </strong>  [[ this.question ]]
-            <br>
-            <strong>Answer : </strong> [[ this.answer ]] 
-            <span class="blinking-cursor">|</span> .
-        </p> 
-    </div> 
+    <div id="all_chats">
+        <div>
+            <ul >
+                <li v-for="chat in chats" :key="chat.question" class="d-flex"> 
+                    <img :src="chat.img" id="curr_img" class="img-fluid">
+                    <p class="alert alert-primary">
+                        <strong> Q: </strong> [[ chat.question ]] 
+                        <br>
+                        <strong>Answer : </strong> [[ chat.answer ]] 
+                    </p> 
+                    <br>
+                </li>
+            </ul>
+        </div> 
+
+        <div v-if="answer_received" class="d-flex">
+            <img :src="img" id="curr_img" class="img-fluid">
+            <p class="alert alert-primary">
+                <strong>Q: </strong>  [[ this.question ]]
+                <br>
+                <strong>Answer : </strong> [[ this.answer ]] 
+                <span class="blinking-cursor">|</span> .
+            </p> 
+        </div> 
+    </div>
     <br>
-    <div>
+
+    <div id="asker" class="column justify-content-center border border-4 border-success rounded">
         <form @submit.prevent>
             <input id="question" style="width: 600px;" v-model="curr_question" placeholder="Ask me anything">
             <button type="submit" @click="getAnswer()" class="btn btn-primary"> Ask a question </button>
         </form>
+        <br>
     </div>
-    <br>
-
 </div>
+
+
+
+
 
 
 <style>
@@ -63,13 +75,17 @@
 
     #app {
         margin: 0 auto;
-        width: 800px;
+        width: 1100px;
         height: 700px;
         background-color: aqua;
         // border: 0.1in solid darkblue; 
         flex-flow: row wrap;
-        overflow: auto; 
         /* Enable vertical scrollbar */
+    }
+    #all_chats{
+        overflow: auto; 
+        width : 1000px;
+        height: 500px ;
     }
     #phead {
         background-color: blue ;
@@ -102,6 +118,20 @@
     #answer{
         overflow-y: auto;
     }
+    .sidebar {
+        background-color: orange;
+        width: 200px;
+        padding: 10px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+      }
+      #asker{
+        position: fixed;
+        margin-bottom: 0px ;
+        margin-left: 100px; 
+      }
 </style>    
 
     
