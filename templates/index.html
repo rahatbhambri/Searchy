@@ -8,24 +8,25 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Pacifico&display=swap" rel="stylesheet">
 </head>
 
-<body>
-<div id="app" class="column justify-content-center border border-4 border-success rounded">
+<body style="background-color : #ADD8E6; font-family: 'Pacifico', cursive;">
+<div id="app" class="column justify-content-center container mt-3 bg-gradient-light border border-primary rounded">
     <h1 class = "font-weight-bold text-center container" id="phead">
         Searchy
         <img class="img-fluid mx-auto" id ="searchy" src="{{ url_for('static', filename='fish.gif') }}">    
     </h1>
     
-    <div class="sidebar">
+    <div class="sidebar bg-gradient-light border border-primary rounded">
         <ul>
           <li><router-link to="/">Session 1</router-link></li>
           <li><router-link to="/about">Session 2</router-link></li>
           </ul>
     </div>
 
-    <div id="all_chats">
-        <div>
+    <div id="all_chats" class="container-fluid">
+        <div class = "container mt-3 bg-gradient-light border border-primary alert alert-primary" >
             <ul >
                 <li v-for="chat in chats" :key="chat.question" class="d-flex"> 
                     <img :src="chat.img" id="curr_img" class="img-fluid">
@@ -90,7 +91,7 @@
     #phead {
         background-color: blue ;
         color : white ;
-        border: 0.05in solid white; 
+        border: 0.05in solid #ADD8E6; 
 
     }
     #curr_img {
@@ -120,6 +121,7 @@
     }
     .sidebar {
         background-color: orange;
+        //border: 0.1in solid red; 
         width: 200px;
         padding: 10px;
         position: fixed;
