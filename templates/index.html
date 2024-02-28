@@ -8,29 +8,51 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-
 </head>
-<body>
 
-<div id="app" class="column justify-content-center">
-    <h1 id="phead">Searchy<img id ="searchy" src="{{ url_for('static', filename='fish.gif') }}">    
+<body>
+<div id="app" class="column justify-content-center border border-4 border-success rounded">
+    <h1 class = "font-weight-bold text-center container" id="phead">
+        Searchy
+        <img class="img-fluid mx-auto" id ="searchy" src="{{ url_for('static', filename='fish.gif') }}">    
     </h1>
-    <div >
+    
+    <!-- <Sidebar> </Sidebar> -->
+    <div>
+        <ul >
+            <li v-for="chat in chats" :key="chat.question" class="d-flex"> 
+                <img :src="chat.img" id="curr_img" class="img-fluid">
+                <p class="alert alert-primary">
+                    <strong> Q: </strong> [[ chat.question ]] 
+                    <br>
+                    <strong>Answer : </strong> [[ chat.answer ]] 
+                </p> 
+                <br>
+            </li>
+        </ul>
+    </div> 
+
+    <div v-if="answer_received" class="d-flex">
+        <img :src="img" id="curr_img" class="img-fluid">
+        <p class="alert alert-primary">
+            <strong>Q: </strong>  [[ this.question ]]
+            <br>
+            <strong>Answer : </strong> [[ this.answer ]] 
+            <span class="blinking-cursor">|</span> .
+        </p> 
+    </div> 
+    <br>
+    <div>
         <form @submit.prevent>
-            <input id="question" style="width: 300px;" v-model="question" placeholder="Ask me anything">
+            <input id="question" style="width: 600px;" v-model="curr_question" placeholder="Ask me anything">
             <button type="submit" @click="getAnswer()" class="btn btn-primary"> Ask a question </button>
         </form>
     </div>
     <br>
-    <div v-if="answer_received" class="d-flex">
-        <img :src="img" id="curr_img" class="img-fluid">
-        <p  class="alert alert-primary"><strong>Answer : </strong> [[ this.answer ]] 
-        <span class="blinking-cursor">|</span> .
-        </p> 
-        </div>
-    </div>
+
 </div>
+
+
 <style>
     #searchy {
         width : 1in ;
@@ -42,9 +64,9 @@
     #app {
         margin: 0 auto;
         width: 800px;
-        height: 500px;
+        height: 700px;
         background-color: aqua;
-        border: 0.1in solid darkblue; 
+        // border: 0.1in solid darkblue; 
         flex-flow: row wrap;
         overflow: auto; 
         /* Enable vertical scrollbar */
@@ -84,20 +106,31 @@
 
     
 <script>
+    //import Sidebar from './sidebar.vue';
+
     new Vue({
         el: '#app',
         delimiters: ['[[', ']]'],
+        /* components: {
+            Sidebar,
+        }, */
         data: {
             question : null,
+            curr_question : null,
             answer_received : false,
             answer : null,
-            img : null
-
+            img : null, 
+            chats : [],
+            last_chat : null
         },
         methods: {
             async getAnswer(){
+                if (this.last_chat !== null){
+                    this.chats.push(this.last_chat) ;
+                }
                 //console.log('Server response:'.data);
-                this.answer_received = false
+                this.answer_received = false ;
+                this.question = this.curr_question ;
                 const data = {"question": this.question}
                 const response = await axios.get('/answer', {
                     params: data
@@ -109,22 +142,25 @@
                 // console.log('Question submitted:', this.question);
                 let index = 0;
                 const startTyping = () => {
-                    this.$nextTick(() => {
-                        this.scrollToBottom();
-                      });
 
                     if (index < text.length) {
-                      this.answer = text.slice(0, index + 1); // Updated to include the current character
-                      index++;
-                      setTimeout(startTyping, Math.random()*15 + 10);
-                    } else {
+                        this.answer = text.slice(0, index + 1); // Updated to include the current character
+                        index++;
+                        setTimeout(startTyping, Math.random()*15 + 10);
+                    }else {
                       this.answer = text;
-                    }
-                    
-                  };
+                    }  
+                };
+
+                this.last_chat = {
+                    'question' : this.question, 
+                    'answer' : text, 
+                    'img' : this.img,
+                    'timestamp' : new Date().toLocaleString()
+                }
                   
                 startTyping();
-                console.log(text, this.answer) ;
+                console.log(this.chats) ;
             }, 
             scrollToBottom() {
                 const scrollableDiv = this.$refs.scrollableDiv;
