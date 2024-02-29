@@ -28,7 +28,7 @@
     <div id="all_chats" class="container-fluid">
         <div class = "container mt-3 bg-gradient-light border border-primary alert alert-primary" >
             <ul >
-                <li v-for="chat in chats" :key="chat.question" class="d-flex"> 
+                <li v-for="chat in chats" :key="chat.question" class="d-flex" style="border: 0.1in solid darkblue; background-color = #ADD8E6;"> 
                     <img :src="chat.img" id="curr_img" class="img-fluid">
                     <p class="alert alert-primary">
                         <strong> Q: </strong> [[ chat.question ]] 
@@ -37,6 +37,7 @@
                     </p> 
                     <br>
                 </li>
+                <br>
             </ul>
         </div> 
 
@@ -53,7 +54,7 @@
     <br>
 
     <div id="asker" class="column justify-content-center border border-4 border-success rounded">
-        <form @submit.prevent>
+        <form @submit.prevent  style="margin-top: 15px;">
             <input id="question" style="width: 600px;" v-model="curr_question" placeholder="Ask me anything">
             <button type="submit" @click="getAnswer()" class="btn btn-primary"> Ask a question </button>
         </form>
@@ -87,6 +88,7 @@
         overflow: auto; 
         width : 1000px;
         height: 500px ;
+        background-color: blue ;
     }
     #phead {
         background-color: blue ;
