@@ -1,6 +1,6 @@
 import torch, requests
 from transformers import BertForQuestionAnswering
-from transformers import BertTokenizer
+from transformers import BertTokenizer, BertTokenizerFast
 from bs4 import BeautifulSoup
 import warnings, re, random
 import spacy
@@ -14,8 +14,9 @@ nlp = spacy.load('en_core_web_sm')
 
 class QASystem:
     def __init__(self):
-        self.model = BertForQuestionAnswering.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
-        self.tokenizer = BertTokenizer.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
+        model_name = "deepset/roberta-large-squad2"
+        self.model = BertForQuestionAnswering.from_pretrained(model_name)
+        self.tokenizer = BertTokenizerFast.from_pretrained(model_name)
         self.context = None
         self.topic = None
         self.image = None

@@ -53,7 +53,7 @@
     </div>
     <br>
 
-    <div id="asker" class="column justify-content-center border border-4 border-success rounded">
+    <div id="asker" class="column justify-content-center">
         <form @submit.prevent  style="margin-top: 15px;">
             <input id="question" style="width: 600px;" v-model="curr_question" placeholder="Ask me anything">
             <button type="submit" @click="getAnswer()" class="btn btn-primary"> Ask a question </button>
