@@ -49,6 +49,16 @@ class QASystem:
         self.context = para
         self.image = image_src
         
+        # if "may refer to" in self.context.split(":")[0]:
+        #     l = soup.find_all('a')
+        #     for link in l:
+        #         print(link, topic)
+        #         if topic.lower() in link.lower():
+        #             self.SetContext(link.split(" ")[2].split("/")[-1])
+        #             break
+        
+            
+        
 
     def getAnswer(self, question, model = nlp):
         if question == "1":
@@ -89,9 +99,11 @@ class QASystem:
 
         pattern = r"\[\s*\d+\s*\]"
         corrected_answer = re.sub(pattern, "", corrected_answer)
-        corrected_answer = "I don't know that" if ("[SEP]" in corrected_answer or len(corrected_answer) < 5) else corrected_answer 
-        #print(corrected_answer, len(corrected_answer), type(corrected_answer))
+        print(corrected_answer, len(corrected_answer), type(corrected_answer))
 
+        corrected_answer = "I don't know that" if ( "Other reasons this message may be displayed:" in self.context or "[SEP]" in corrected_answer or len(corrected_answer) < 5) else corrected_answer 
+
+            
         i = random.randint(0, len(self.image)-1) if len(self.image) > 0 else -1
         curr_im = self.image[i] if i >= 0 else None
 
