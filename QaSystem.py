@@ -1,6 +1,6 @@
 import torch, requests
 from transformers import BertForQuestionAnswering
-from transformers import BertTokenizer, BertTokenizerFast
+from transformers import BertTokenizer, BertTokenizerFast, BertConfig
 from bs4 import BeautifulSoup
 import warnings, re, random
 import spacy
@@ -14,9 +14,12 @@ nlp = spacy.load('en_core_web_sm')
 
 class QASystem:
     def __init__(self):
-        model_name = "deepset/roberta-large-squad2"
-        self.model = BertForQuestionAnswering.from_pretrained(model_name)
-        self.tokenizer = BertTokenizerFast.from_pretrained(model_name)
+        model_name = "bert-large-uncased-whole-word-masking-finetuned-squad"
+        config = BertConfig.from_pretrained(model_name)
+        config.max_position_embeddings = 512 
+        
+        self.model = BertForQuestionAnswering.from_pretrained(model_name, config = config, ignore_mismatched_sizes=True)
+        self.tokenizer = BertTokenizerFast.from_pretrained(model_name, config = config) 
         self.context = None
         self.topic = None
         self.image = None
@@ -24,8 +27,10 @@ class QASystem:
 
 
     def SetContext(self, topic):
+        topic = topic.title()
+        print(topic, " topic")
         self.topic = topic
-        response = requests.get(f"https://en.wikipedia.org/wiki/{topic.lower()}")
+        response = requests.get(f"https://en.wikipedia.org/wiki/{topic}")
         soup = BeautifulSoup(response.content, "html.parser")
         paragraphs = soup.find_all("p")
         para = ""
@@ -84,8 +89,9 @@ class QASystem:
 
         pattern = r"\[\s*\d+\s*\]"
         corrected_answer = re.sub(pattern, "", corrected_answer)
-        corrected_answer = corrected_answer if "[SEP]" not in corrected_answer else "I don't know that"
-        
+        corrected_answer = "I don't know that" if ("[SEP]" in corrected_answer or len(corrected_answer) < 5) else corrected_answer 
+        #print(corrected_answer, len(corrected_answer), type(corrected_answer))
+
         i = random.randint(0, len(self.image)-1) if len(self.image) > 0 else -1
         curr_im = self.image[i] if i >= 0 else None
 
