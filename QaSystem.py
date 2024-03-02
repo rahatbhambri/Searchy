@@ -89,6 +89,7 @@ class QASystem:
         tokens = self.tokenizer.convert_ids_to_tokens(encoding['input_ids'].squeeze())
         answer_tokens = tokens[start_index:end_index+1]
         answer = self.tokenizer.convert_tokens_to_string(answer_tokens)
+        #print(answer)
         corrected_answer = ''
 
         for word in answer.split():
@@ -102,7 +103,8 @@ class QASystem:
         print(corrected_answer, len(corrected_answer), type(corrected_answer))
 
         corrected_answer = "I don't know that" if ( "Other reasons this message may be displayed:" in self.context or "[SEP]" in corrected_answer or len(corrected_answer) < 5) else corrected_answer 
-
+        if "may refer to:" in self.context[:30]:
+            corrected_answer = "Ambiguous context"
             
         i = random.randint(0, len(self.image)-1) if len(self.image) > 0 else -1
         curr_im = self.image[i] if i >= 0 else None
