@@ -3,3 +3,4 @@ torch
 bs4
 requests
 flask
+celery

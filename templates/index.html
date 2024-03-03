@@ -140,8 +140,6 @@
 
     
 <script>
-    //import Sidebar from './sidebar.vue';
-
     new Vue({
         el: '#app',
         delimiters: ['[[', ']]'],
@@ -157,11 +155,22 @@
             chats : [],
             last_chat : null
         },
+        mounted(){
+            // Retrieve data from session storage
+            let savedChats = sessionStorage.getItem('chats');
+
+            // Check if key exists in session storage
+            if (savedChats === null) {
+                this.chats = [];
+            } else {
+                this.chats = JSON.parse(savedChats);
+            }
+        },
         methods: {
             async getAnswer(){
-                if (this.last_chat !== null){
+                /*if (this.last_chat !== null){
                     this.chats.push(this.last_chat) ;
-                }
+                }*/
                 //console.log('Server response:'.data);
                 this.answer_received = false ;
                 this.question = this.curr_question ;
@@ -175,14 +184,17 @@
                 // console.log('Server response:', response.data);
                 // console.log('Question submitted:', this.question);
                 let index = 0;
-                const startTyping = () => {
+                const startTyping = async () => {
 
                     if (index < text.length) {
                         this.answer = text.slice(0, index + 1); // Updated to include the current character
                         index++;
-                        setTimeout(startTyping, Math.random()*15 + 10);
+                        setTimeout(startTyping, Math.random()*25 + 10);
                     }else {
                       this.answer = text;
+                      await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for 3 seconds
+                      this.answer_received = false ;
+                      this.chats.push(this.last_chat) ;
                     }  
                 };
 
@@ -194,7 +206,11 @@
                 }
                   
                 startTyping();
-                console.log(this.chats) ;
+                
+                
+                //console.log(this.chats) ;
+                // update chats
+                sessionStorage.setItem('chats', JSON.stringify(this.chats));
             }, 
             scrollToBottom() {
                 const scrollableDiv = this.$refs.scrollableDiv;
