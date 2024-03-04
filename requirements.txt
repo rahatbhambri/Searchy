@@ -4,3 +4,5 @@ bs4
 requests
 flask
 celery
+Flask-Redis
+pymongo

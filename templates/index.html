@@ -19,13 +19,13 @@
     </h1>
     
     <div class="sidebar bg-gradient-light border border-primary rounded">
-        <ul>
-          <li><router-link to="/">Session 1</router-link></li>
-          <li><router-link to="/about">Session 2</router-link></li>
-          </ul>
+        <ul class="sidebar-ul">
+            <li><router-link to="/">+ New Chat</router-link></li>
+            <li v-for="sess in sessions" @click="changeSession(sess.id)"> <router-link to="/">Session [[ sess.id ]]</router-link></li>
+        </ul>
     </div>
 
-    <div id="all_chats" class="container-fluid">
+    <div id="all_chats" class="container-fluid mt-3 bg-gradient-light border border-primary">
         <div class = "container mt-3 bg-gradient-light border border-primary alert alert-primary" >
             <ul >
                 <li v-for="chat in chats" :key="chat.question" class="d-flex" style="border: 0.1in solid darkblue; background-color = #ADD8E6;"> 
@@ -74,7 +74,11 @@
         display: inline; 
         vertical-align: middle; 
     }
-
+    .sidebar-ul li:hover {
+        background-color: #ADD8E6;
+        text-decoration: underline;
+        cursor: pointer;
+    }
     #app {
         margin: 0 auto;
         width: 1100px;
@@ -123,7 +127,6 @@
     }
     .sidebar {
         background-color: orange;
-        //border: 0.1in solid red; 
         width: 200px;
         padding: 10px;
         position: fixed;
@@ -152,25 +155,36 @@
             answer_received : false,
             answer : null,
             img : null, 
-            chats : [],
-            last_chat : null
+            chats : [], 
+            sessions : [], 
+            curr_session_id : 1 
         },
         mounted(){
             // Retrieve data from session storage
-            let savedChats = sessionStorage.getItem('chats');
-
+            let savedChats = sessionStorage.getItem(this.curr_session_id);
             // Check if key exists in session storage
             if (savedChats === null) {
                 this.chats = [];
             } else {
                 this.chats = JSON.parse(savedChats);
             }
+
+            axios.get('/get_user', { params : {"user_id" : "jimmy@gmail.com"} })
+            .then(response => {
+                this.sessions = response.data;
+                console.log("session data= ", this.sessions) ;
+            })
+            .catch(error => {
+                this.sessions = [
+                    {'id' : 1}, 
+                    {'id' : 2},
+                    {'id' : 3}
+                ] ;
+                console.error('Error fetching data:', error);
+            });
         },
         methods: {
             async getAnswer(){
-                /*if (this.last_chat !== null){
-                    this.chats.push(this.last_chat) ;
-                }*/
                 //console.log('Server response:'.data);
                 this.answer_received = false ;
                 this.question = this.curr_question ;
@@ -194,11 +208,11 @@
                       this.answer = text;
                       await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for 3 seconds
                       this.answer_received = false ;
-                      this.chats.push(this.last_chat) ;
+                      this.chats.push(last_chat) ;
                     }  
                 };
 
-                this.last_chat = {
+                var last_chat = {
                     'question' : this.question, 
                     'answer' : text, 
                     'img' : this.img,
@@ -206,24 +220,36 @@
                 }
                   
                 startTyping();
+                sessionStorage.setItem(this.curr_session_id , JSON.stringify(this.chats));
+            },
+            async changeSession(session_id){
+                var data = {
+                    'user_id' : 'jimmy@gmail.com', 
+                    'session_id': session_id
+                }
+                const response = await axios.get('/get_chats', {
+                    params: data
+                });  
                 
-                
-                //console.log(this.chats) ;
-                // update chats
-                sessionStorage.setItem('chats', JSON.stringify(this.chats));
+                console.log(session_id, response.data) ;
+                if (response !== null){
+                    console.log(response);
+                    this.chats = response.data ;
+                } else{
+                    this.chats = [] ;
+                }
             }, 
             scrollToBottom() {
                 const scrollableDiv = this.$refs.scrollableDiv;
                 scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
-            }
+            } 
+
         }
     });
 
    
 
 </script>
-
-
 
 </body>
 </html>

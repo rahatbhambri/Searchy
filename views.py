@@ -2,9 +2,10 @@ from user_manager import User
 from flask import request, Blueprint, render_template
 from QaSystem import QASystem
 from tasks import add_chat_to_db
+from settings import db
+from datetime import datetime as dt
 
 views_bp = Blueprint('views', __name__)
-
 qasys = QASystem()
 
 @views_bp.route("/")
@@ -18,6 +19,43 @@ def create_user():
     return "User added successfully"
 
 
+@views_bp.route("/answer", methods = ["GET"])
+def getAnswer():
+    data = {}
+    question = request.args.get('question')
+    data['answer'], data['img'] = qasys.getAnswer(question)
+    payl = {
+        'session_id' : 1,
+        'user_id' : 'jimmy@gmail.com',
+        'timestamp' : dt.now(), 
+        'question' : question, 
+        'img' : data['img'], 
+        'answer' : data['answer']   
+    }
+    db.chats.insert_one(payl)
+    #result = add_chat_to_db(question=question, answer=data["answer"]).delay()
+    return data
+
+
+@views_bp.route("/get_chats", methods = ["GET"])
+def getChats():
+    user_id = str(request.args.get('user_id'))
+    session_id = int(request.args.get('session_id'))
+
+    data = list(db.chats.find({'user_id' : user_id, 'session_id' : session_id}, 
+                              {'user_id' : 0, 'session_id' : 0, '_id' : 0}))
+    #print(data, user_id, session_id) 
+    return data 
+
+
+@views_bp.route("/get_user", methods = ["GET"])
+def getUserData():
+    user_id = str(request.args.get('user_id'))
+    data = db.users.find_one({'user_id' : user_id}, 
+                              {'user_id' : 0, '_id' : 0})
+    #print(data, user_id, session_id) 
+    return data.get("sessions", []) 
+
 # @views_bp.route("/setTopic", methods = ["POST"]) 
     # def setTopic():
     #     data = request.json
@@ -26,13 +64,4 @@ def create_user():
     #         return "Topic set successfully"
     #     else:
     #         return "Not a valid topic"
-
-
-@views_bp.route("/answer", methods = ["GET"])
-def getAnswer():
-    data = {}
-    question = request.args.get('question')
-    data['answer'], data['img'] = qasys.getAnswer(question)
-    #result = add_chat_to_db(question=question, answer=data["answer"]).delay()
-    return data
 
