@@ -12,54 +12,64 @@
 </head>
 
 <body style="background-color : #ADD8E6; font-family: 'Pacifico', cursive;">
-<div id="app" class="column justify-content-center container mt-3 bg-gradient-light border border-primary rounded">
-    <h1 class = "font-weight-bold text-center container" id="phead">
-        Searchy
-        <img class="img-fluid mx-auto" id ="searchy" src="{{ url_for('static', filename='fish.gif') }}">    
-    </h1>
+<div id="app" class="row align-items-start justify-content-right container mt-3 bg-gradient-light border border-primary rounded">
     
-    <div class="sidebar bg-gradient-light border border-primary rounded">
+    <div class="col sidebar bg-gradient-light border border-primary rounded">
         <ul class="sidebar-ul">
             <li><router-link to="/">+ New Chat</router-link></li>
             <li v-for="sess in sessions" @click="changeSession(sess.id)"> <router-link to="/">Session [[ sess.id ]]</router-link></li>
         </ul>
     </div>
 
-    <div id="all_chats" class="container-fluid mt-3 bg-gradient-light border border-primary">
-        <div class = "container mt-3 bg-gradient-light border border-primary alert alert-primary" >
-            <ul >
-                <li v-for="chat in chats" :key="chat.question" class="d-flex" style="border: 0.1in solid darkblue; background-color = #ADD8E6;"> 
-                    <img :src="chat.img" id="curr_img" class="img-fluid">
-                    <p class="alert alert-primary">
-                        <strong> Q: </strong> [[ chat.question ]] 
+    <div id="right-options" class = "col" style= "height:1px;  margin-left: 1200px; margin-top: 5px ;">
+        <button class="btn btn-primary" style="background-color: red;"> Logout </button>
+    </div>
+
+    <div id = "main" class="col column justify-content-center container mt-3 bg-gradient-light border border-primary rounded" >
+
+        <h1 class = "font-weight-bold text-center container" id="phead">
+            Searchy
+            <img class="img-fluid mx-auto" id ="searchy" src="{{ url_for('static', filename='fish.gif') }}">    
+        </h1>
+        
+
+        <div id="all_chats" class="container-fluid mt-3 bg-gradient-light border border-primary">
+            <div class = "container mt-3 bg-gradient-light border border-primary alert alert-primary" >
+                <ul >
+                    <li v-for="chat in chats" :key="chat.question" class="d-flex" style="border: 0.1in solid darkblue; background-color = #ADD8E6;"> 
+                        <img :src="chat.img" id="curr_img" class="img-fluid">
+                        <p class="alert alert-primary">
+                            <strong> Q: </strong> [[ chat.question ]] 
+                            <br>
+                            <strong>Answer : </strong> [[ chat.answer ]] 
+                        </p> 
                         <br>
-                        <strong>Answer : </strong> [[ chat.answer ]] 
-                    </p> 
+                    </li>
                     <br>
-                </li>
-                <br>
-            </ul>
-        </div> 
+                </ul>
+            </div> 
 
-        <div v-if="answer_received" class="d-flex">
-            <img :src="img" id="curr_img" class="img-fluid">
-            <p class="alert alert-primary">
-                <strong>Q: </strong>  [[ this.question ]]
-                <br>
-                <strong>Answer : </strong> [[ this.answer ]] 
-                <span class="blinking-cursor">|</span> .
-            </p> 
-        </div> 
-    </div>
-    <br>
+            <div v-if="answer_received" class="d-flex">
+                <img :src="img" id="curr_img" class="img-fluid">
+                <p class="alert alert-primary">
+                    <strong>Q: </strong>  [[ this.question ]]
+                    <br>
+                    <strong>Answer : </strong> [[ this.answer ]] 
+                    <span class="blinking-cursor">|</span> .
+                </p> 
+            </div> 
+        </div>
 
-    <div id="asker" class="column justify-content-center">
-        <form @submit.prevent  style="margin-top: 15px;">
-            <input id="question" style="width: 600px;" v-model="curr_question" placeholder="Ask me anything">
-            <button type="submit" @click="getAnswer()" class="btn btn-primary"> Ask a question </button>
-        </form>
-        <br>
+        <div id="asker" class="column justify-content-center">
+            <form @submit.prevent  style="margin-top: 15px;">
+                <input id="question" style="width: 600px;" v-model="curr_question" placeholder="Ask me anything">
+                <button type="submit" @click="getAnswer()" class="btn btn-primary"> Ask a question </button>
+            </form>
+            <br>
+        </div>
     </div>
+
+
 </div>
 
 
@@ -81,16 +91,20 @@
     }
     #app {
         margin: 0 auto;
-        width: 1100px;
+        margin-left: 210px ;
+        width: 2000px;
         height: 700px;
         background-color: aqua;
         // border: 0.1in solid darkblue; 
         flex-flow: row wrap;
         /* Enable vertical scrollbar */
+        display: inline-block;
+        
+        
     }
     #all_chats{
         overflow: auto; 
-        width : 1000px;
+        width : 1070px;
         height: 500px ;
         background-color: blue ;
     }
@@ -134,7 +148,7 @@
         left: 0;
         height: 100vh;
       }
-      #asker{
+    #asker{
         position: fixed;
         margin-bottom: 0px ;
         margin-left: 100px; 
