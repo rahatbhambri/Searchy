@@ -1,4 +1,6 @@
 <template>
+  <router-view></router-view>
+
   <div
     id="app_main"
     class="row align-items-start justify-content-right container mt-3 bg-gradient-light border border-primary rounded"
@@ -167,7 +169,7 @@ hr {
 
 <script>
 export default {
-  el: "#app",
+  el: "#search",
   data() {
     return {
       question: null,
