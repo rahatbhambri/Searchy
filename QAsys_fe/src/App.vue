@@ -159,8 +159,8 @@ hr {
 }
 
 #asker {
-  position: fixed;
-  margin-bottom: 0px;
+  position: relative;
+  margin-bottom: 10px;
   margin-left: 100px;
 }
 </style>
