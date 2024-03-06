@@ -17,7 +17,7 @@
     <div class="col sidebar bg-gradient-light border border-primary rounded">
         <ul class="sidebar-ul">
             <li><router-link to="/">+ New Chat</router-link></li>
-            <li v-for="sess in sessions" @click="changeSession(sess.id)"> <router-link to="/">Session [[ sess.id ]]</router-link></li>
+            <li v-for="sess in sessions" @click="changeSession(sess.id)"> <router-link to="/hello">Session [[ sess.id ]]</router-link></li>
         </ul>
     </div>
 
@@ -29,7 +29,7 @@
 
         <h1 class = "font-weight-bold text-center container" id="phead">
             Searchy
-            <img class="img-fluid mx-auto" id ="searchy" src="{{ url_for('static', filename='fish.gif') }}">    
+            <img class="img-fluid mx-auto" id ="searchy" src="/src/assets/fish.gif">    
         </h1>
         
 
@@ -183,7 +183,7 @@
                 this.chats = JSON.parse(savedChats);
             }
 
-            axios.get('/get_user', { params : {"user_id" : "jimmy@gmail.com"} })
+            axios.get('http://127.0.0.1:5000/get_user', { params : {"user_id" : "jimmy@gmail.com"} })
             .then(response => {
                 this.sessions = response.data;
                 console.log("session data= ", this.sessions) ;
@@ -203,7 +203,7 @@
                 this.answer_received = false ;
                 this.question = this.curr_question ;
                 const data = {"question": this.question}
-                const response = await axios.get('/answer', {
+                const response = await axios.get('http://127.0.0.1:5000/answer', {
                     params: data
                 });               
                 this.answer_received = true ;
@@ -241,7 +241,7 @@
                     'user_id' : 'jimmy@gmail.com', 
                     'session_id': session_id
                 }
-                const response = await axios.get('/get_chats', {
+                const response = await axios.get('http://127.0.0.1:5000/get_chats', {
                     params: data
                 });  
                 
