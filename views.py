@@ -22,11 +22,16 @@ def create_user():
 @views_bp.route("/answer", methods = ["GET"])
 def getAnswer():
     data = {}
-    question = request.args.get('question')
+    curr_data =  dict(request.args)
+    question = curr_data.get('question')
+    session_id = int(curr_data.get('session_id'))
+    user_id = curr_data.get('user_id')
+    print(curr_data)
+        
     data['answer'], data['img'] = qasys.getAnswer(question)
     payl = {
-        'session_id' : 1,
-        'user_id' : 'jimmy@gmail.com',
+        'session_id' : session_id,
+        'user_id' : user_id, 
         'timestamp' : dt.now(), 
         'question' : question, 
         'img' : data['img'], 
@@ -55,6 +60,22 @@ def getUserData():
                               {'user_id' : 0, '_id' : 0})
     #print(data, user_id, session_id) 
     return data.get("sessions", []) 
+
+
+
+@views_bp.route("/set_session", methods = ["POST"])
+def setSession():
+    data = request.json 
+    session = data["session"]
+    user_id = data["user_id"]
+    
+    print(session)
+    db.users.find_one_and_update({'user_id' : user_id},
+                                 {"$set" : {"sessions": session}}
+                                 )
+    return "POST successfull"
+    
+    
 
 # @views_bp.route("/setTopic", methods = ["POST"]) 
     # def setTopic():

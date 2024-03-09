@@ -8,7 +8,7 @@
   >
     <div class="col sidebar bg-gradient-light border border-primary rounded">
       <ul class="sidebar-ul">
-        <li>+ New Chat</li>
+        <li @click="AddSession()">+ New Chat</li>
         <li v-for="sess in sessions" @click="changeSession(sess.id)">
           Session [[ sess.id ]]
         </li>
@@ -23,10 +23,7 @@
       <button class="btn btn-primary" style="background-color: red">Logout</button>
     </div>
 
-    <div
-      id="main"
-      class="col column justify-content-center container mt-3 bg-gradient-light border border-primary rounded"
-    >
+    <div id="main" class="col column justify-content-center container mt-3">
       <h1 class="font-weight-bold text-center container" id="phead">
         Searchy
         <img class="img-fluid mx-auto" id="searchy" src="/src/assets/fish.gif" />
@@ -178,6 +175,7 @@ export default {
       chats: [],
       sessions: [],
       curr_session_id: 1,
+      user_id: "jimmy@gmail.com",
     };
   },
   mounted() {
@@ -206,7 +204,12 @@ export default {
       //console.log('Server response:'.data);
       this.answer_received = false;
       this.question = this.curr_question;
-      const data = { question: this.question };
+      const data = {
+        question: this.question,
+        user_id: this.user_id,
+        session_id: this.curr_session_id,
+      };
+      console.log(data);
       const response = await axios.get("http://127.0.0.1:5000/answer", {
         params: data,
       });
@@ -240,8 +243,9 @@ export default {
       sessionStorage.setItem(this.curr_session_id, JSON.stringify(this.chats));
     },
     async changeSession(session_id) {
+      this.curr_session_id = session_id;
       var data = {
-        user_id: "jimmy@gmail.com",
+        user_id: this.user_id,
         session_id: session_id,
       };
       const response = await axios.get("http://127.0.0.1:5000/get_chats", {
@@ -255,6 +259,23 @@ export default {
       } else {
         this.chats = [];
       }
+    },
+    AddSession() {
+      var new_len = this.sessions.length + 1;
+      this.sessions.push({ id: new_len });
+      axios
+        .post("http://127.0.0.1:5000/set_session", {
+          user_id: this.user_id,
+          session: this.sessions,
+        })
+        .then(function (response) {
+          // Handle successful response
+          console.log("Response:", response.data);
+        })
+        .catch(function (error) {
+          // Handle error
+          console.error("Error:", error);
+        });
     },
     scrollToBottom() {
       const scrollableDiv = this.$refs.scrollableDiv;
