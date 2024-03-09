@@ -8,11 +8,9 @@
   >
     <div class="col sidebar bg-gradient-light border border-primary rounded">
       <ul class="sidebar-ul">
-        <li><router-link style="color: black" to="/">+ New Chat </router-link></li>
+        <li>+ New Chat</li>
         <li v-for="sess in sessions" @click="changeSession(sess.id)">
-          <router-link style="color: black" to="/hello"
-            >Session [[ sess.id ]]</router-link
-          >
+          Session [[ sess.id ]]
         </li>
       </ul>
     </div>
