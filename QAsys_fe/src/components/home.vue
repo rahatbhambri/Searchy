@@ -47,6 +47,7 @@ export default {
     };
   },
   mounted() {
+    document.title = "Searchy | Your search app";
     var text = this.main_text;
     let index = 0;
     const startTyping = () => {

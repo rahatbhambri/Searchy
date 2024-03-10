@@ -181,8 +181,8 @@ export default {
     };
   },
   mounted() {
+    document.title = "Searchy | Your search app";
     const db = dataStore();
-
     // Retrieve data from session storage
     this.user_id = db.getMail;
     console.log(this.user_id);
