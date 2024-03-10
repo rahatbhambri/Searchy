@@ -163,6 +163,8 @@ hr {
 </style>
 
 <script>
+import { dataStore } from "../stores";
+
 export default {
   el: "#search",
   data() {
@@ -175,11 +177,15 @@ export default {
       chats: [],
       sessions: [],
       curr_session_id: 1,
-      user_id: "jimmy@gmail.com",
+      user_id: null,
     };
   },
   mounted() {
+    const db = dataStore();
+
     // Retrieve data from session storage
+    this.user_id = db.getMail;
+    console.log(this.user_id);
     let savedChats = sessionStorage.getItem(this.curr_session_id);
     // Check if key exists in session storage
     if (savedChats === null) {
