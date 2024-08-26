@@ -8,6 +8,7 @@ import spacy
 
 warnings.filterwarnings("ignore", message = "Be aware, overflowing tokens are not returned for the setting you have chosen.*" \
 , category=RuntimeWarning)
+spacy.cli.download("en_core_web_sm")
 nlp = spacy.load('en_core_web_sm')
 
 
