@@ -49,16 +49,7 @@ class QASystem:
         
         self.context = para
         self.image = image_src
-        
-        # if "may refer to" in self.context.split(":")[0]:
-        #     l = soup.find_all('a')
-        #     for link in l:
-        #         print(link, topic)
-        #         if topic.lower() in link.lower():
-        #             self.SetContext(link.split(" ")[2].split("/")[-1])
-        #             break
-        
-            
+             
         
 
     def getAnswer(self, question, model = nlp):

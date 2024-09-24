@@ -7,10 +7,10 @@
     <div class="col sidebar bg-gradient-light border border-primary rounded">
       <ul class="sidebar-ul">
         <li><router-link style="color: black" to="/">+ New Chat </router-link></li>
-        <li v-for="sess in sessions" @click="changeSession(sess.id)">
-          <router-link style="color: black" to="/hello"
-            >Session [[ sess.id ]]</router-link
-          >
+        <li v-for="sess in sessions" :key="sess.id" @click="changeSession(sess.id)">
+          <router-link :to="'/hello'" style="color:black">
+            Session [[ sess.id ]]
+          </router-link>
         </li>
       </ul>
     </div>
@@ -44,7 +44,7 @@
               v-for="chat in chats"
               :key="chat.question"
               class="d-flex"
-              style="border: 0.1in solid darkblue; background-color = #ADD8E6;"
+              style="border: 0.1in solid darkblue; background-color : #ADD8E6;"
             >
               <img :src="chat.img" id="curr_img" class="img-fluid" />
               <p class="alert alert-primary">
@@ -166,6 +166,8 @@ hr {
 </style>
 
 <script>
+import axios from "axios";
+
 export default {
   el: "#app",
   data() {
