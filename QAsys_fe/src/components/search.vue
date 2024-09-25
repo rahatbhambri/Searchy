@@ -8,7 +8,9 @@
   >
     <div class="col sidebar bg-gradient-light border border-primary rounded">
       <ul class="sidebar-ul">
-        <li><router-link style="color: black" to="/">+ New Chat </router-link></li>
+        <li>
+          <button style="color: black" @click="AddNewSession()">+ New Chat</button>
+        </li>
         <li v-for="sess in sessions" :key="sess.id" @click="changeSession(sess.id)">
           <!-- <router-link style="color: black" to="/hello" -->
           Session [[ sess.id ]]
@@ -242,6 +244,14 @@ export default {
 
       startTyping();
       sessionStorage.setItem(this.curr_session_id, JSON.stringify(this.chats));
+    },
+    async AddNewSession() {
+      const newSession = {
+        id: this.sessions.length + 1,
+      };
+      this.sessions.push(newSession);
+      this.curr_session_id = newSession.id;
+      console.log(this.curr_session_id);
     },
     async changeSession(session_id) {
       var data = {
