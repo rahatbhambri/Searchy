@@ -212,10 +212,11 @@ export default {
       //console.log('Server response:'.data);
       this.answer_received = false;
       this.question = this.curr_question;
-      const data = { question: this.question };
-      const response = await axios.get("http://127.0.0.1:5000/answer", {
-        params: data,
-      });
+      const data = {
+        question: this.question,
+        session_id: this.curr_session_id,
+      };
+      const response = await axios.post("http://127.0.0.1:5000/answer", data);
       this.answer_received = true;
       const text = response.data["answer"];
       this.img = response.data["img"];

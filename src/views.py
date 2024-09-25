@@ -19,13 +19,17 @@ def create_user():
     return "User added successfully"
 
 
-@views_bp.route("/answer", methods = ["GET"])
+@views_bp.route("/answer", methods = ["POST"])
 def getAnswer():
     data = {}
-    question = request.args.get('question')
+    
+    body = request.json
+    question = body.get('question')
+    sess_id =  body.get('session_id')
+    print(question, sess_id)
     data['answer'], data['img'] = qasys.getAnswer(question)
     payl = {
-        'session_id' : 1,
+        'session_id' : sess_id,
         'user_id' : 'jimmy@gmail.com',
         'timestamp' : dt.now(), 
         'question' : question, 
@@ -55,13 +59,4 @@ def getUserData():
                               {'user_id' : 0, '_id' : 0})
     #print(data, user_id, session_id) 
     return data.get("sessions", []) 
-
-# @views_bp.route("/setTopic", methods = ["POST"]) 
-    # def setTopic():
-    #     data = request.json
-    #     if data.get("topic", None):
-    #         qasys.SetContext(data.get("topic"))
-    #         return "Topic set successfully"
-    #     else:
-    #         return "Not a valid topic"
 
