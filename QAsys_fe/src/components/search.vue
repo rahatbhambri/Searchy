@@ -43,7 +43,7 @@
         <div
           class="container mt-3 bg-gradient-light border border-primary alert alert-primary"
         >
-          <ul>
+          <ul ref="chatList">
             <li
               v-for="chat in chats"
               :key="chat.question"
@@ -245,6 +245,10 @@ export default {
 
       startTyping();
       sessionStorage.setItem(this.curr_session_id, JSON.stringify(this.chats));
+      // Scroll to the bottom after the DOM updates
+      this.$nextTick(() => {
+        this.scrollToBottom();
+      });
     },
     async AddNewSession() {
       const newSession = {
@@ -270,10 +274,12 @@ export default {
       } else {
         this.chats = [];
       }
+      this.scrollToBottom();
     },
+
     scrollToBottom() {
-      const scrollableDiv = this.$refs.scrollableDiv;
-      scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
+      const chatList = this.$refs.chatList;
+      chatList.scrollTop = chatList.scrollHeight;
     },
   },
 };
