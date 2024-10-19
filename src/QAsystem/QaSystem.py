@@ -1,6 +1,6 @@
 import torch, requests
 from transformers import BertForQuestionAnswering
-from transformers import BertTokenizer, BertTokenizerFast, BertConfig
+from transformers import BertTokenizerFast, BertConfig
 from bs4 import BeautifulSoup
 import warnings, re, random
 import spacy

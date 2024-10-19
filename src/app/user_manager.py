@@ -1,4 +1,4 @@
-from QaSystem import QASystem
+from QAsystem.QaSystem import QASystem
 
 class User:
     def __init__(self, username, email):

@@ -1,8 +1,8 @@
-from user_manager import User
+from .user_manager import User
 from flask import request, Blueprint, render_template
-from QaSystem import QASystem
-from tasks import add_chat_to_db
-from settings import db
+from QAsystem.QaSystem import QASystem
+from app.tasks import add_chat_to_db
+from config.settings import db
 from datetime import datetime as dt
 
 views_bp = Blueprint('views', __name__)

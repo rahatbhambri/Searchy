@@ -16,7 +16,10 @@ Searchy is a Predicitive AI based Questions answering system. Searchy uses a com
 
 **4. Deployment:**
   Flask 
-
   
+
+  ![GIF Description](./static/output.gif)
+
+
 
 

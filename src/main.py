@@ -1,8 +1,8 @@
 from flask import Flask
-from views import views_bp
+from app.views import views_bp
 from celery import Celery
 from flask_cors import CORS
-from settings import CELERY_BACKEND_URL, CELERY_BROCKER_URL
+from config.settings import CELERY_BACKEND_URL, CELERY_BROCKER_URL
 
 
 app = Flask(__name__)
