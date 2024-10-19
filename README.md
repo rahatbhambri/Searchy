@@ -1,6 +1,7 @@
 **Searchy** 
 
-
+![GIF Description](./static/output.gif)
+  
 Searchy is a Predicitive AI based Questions answering system. Searchy uses a combination of web-scraping, language libraries and sentence matching models to answer users question. 
 
 **Tech stack:**
@@ -18,7 +19,7 @@ Searchy is a Predicitive AI based Questions answering system. Searchy uses a com
   Flask 
   
 
-  ![GIF Description](./static/output.gif)
+
 
 
 
