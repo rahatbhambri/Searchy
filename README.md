@@ -1,26 +1,45 @@
-**Searchy** 
+# Searchy
 
 ![GIF Description](./static/output.gif)
-  
-Searchy is a Predicitive AI based Questions answering system. Searchy uses a combination of web-scraping, language libraries and sentence matching models to answer users question. 
 
-**Tech stack:**
+## Overview
+Searchy is a predictive AI-based question-answering system. It utilizes a combination of web scraping, natural language processing (NLP), and sentence-matching models to provide accurate responses to user queries.
 
-**1. Web scraping:** 
-  BS4
+## Features
+- **AI-Powered Answers:** Uses Google's BERT model for sentence matching.
+- **Web Scraping Integration:** Extracts relevant data using BeautifulSoup.
+- **NLP Processing:** Utilizes spaCy for part-of-speech (POS) tagging and analysis.
+- **Flask Deployment:** Lightweight web-based interface for easy interaction.
 
-**2. Sentence matching:**
-  Google's Bert model
+## Tech Stack
+- **Web Scraping:** BeautifulSoup (BS4)
+- **Sentence Matching:** Google's BERT model
+- **POS Tagging:** spaCy NLP model
+- **Deployment:** Flask (Python)
 
-**3. POS tagging:**
-  Spacy's NLP model 
+## Installation
+```sh
+git clone https://github.com/rahatbhambri/Searchy.git
+cd Searchy
+```
 
-**4. Deployment:**
-  Flask 
-  
+## Usage
+1. Install dependencies:
+   ```sh
+   pip install -r requirements.txt
+   ```
+2. Run the application:
+   ```sh
+   python app.py
+   ```
+3. Access the web interface at `http://localhost:5000` and start asking questions.
 
+## Future Enhancements
+- Improve the model's accuracy with more training data.
+- Implement database storage for caching responses.
+- Extend support for multiple languages.
+- Deploy as a cloud-based API.
 
-
-
-
+## Contributing
+Contributions are welcome! Feel free to submit issues and pull requests.
 
